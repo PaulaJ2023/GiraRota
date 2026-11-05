@@ -8,7 +8,7 @@ Projeto A3 - Site de transporte voltado para mulheres que permite priorizar rota
 ---
 # 📑 Sobre o Projeto
 O **GiraRota** é uma plataforma de transporte exclusivo para mulheres que otimiza rotas seguras e permite bloquear vias específicas em tempo real.
-Professores: Edjane Mikaelly Silva de Azevedo e Ronyclei Raimundo da Silva
+* Professores: Edjane Mikaelly Silva de Azevedo e Ronyclei Raimundo da Silva
 
 ---
 # 👥 Desenvolvedore
