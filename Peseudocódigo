@@ -1,0 +1,105 @@
+import networkx as nx
+import matplotlib.pyplot as plt
+
+# Parâmetros de Simulação de Segurança
+origem_bloqueio = "Praça Central"
+destino_bloqueio = "Rua do Sol"
+
+# 1. Criação do Grafo
+G = nx.Graph()
+
+# 2. Adicionando as Arestas com Pesos (Custo Composto)
+arestas = [
+    ('Residência', 'Praça Central', 4),
+    ('Residência', 'Av. das Flores', 2),
+    ('Praça Central', 'Av. das Flores', 1),
+    ('Praça Central', 'Rua do Sol', 5),         # Rua bloqueada por escolha da passageira
+    ('Av. das Flores', 'Rua do Sol', 3),
+    ('Praça Central', 'Universidade', 15),
+    ('Rua do Sol', 'Rua do Comércio', 2),
+    ('Av. das Flores', 'Rua do Comércio', 6),
+    ('Rua do Comércio', 'Universidade', 3)
+]
+
+G.add_weighted_edges_from(arestas)
+
+# 3. Aplicando a Regra de Segurança
+rua_bloqueada = (origem_bloqueio, destino_bloqueio)
+if G.has_edge(rua_bloqueada[0], rua_bloqueada[1]):
+    G[rua_bloqueada[0]][rua_bloqueada[1]]['weight'] = float('inf')
+    G[rua_bloqueada[1]][rua_bloqueada[0]]['weight'] = float('inf')
+
+# 4. Aplicação do Algoritmo de Dijkstra
+origem = 'Residência'
+destino = 'Universidade'
+
+melhor_rota = nx.dijkstra_path(G, source=origem, target=destino, weight='weight')
+custo_total = nx.dijkstra_path_length(G, source=origem, target=destino, weight='weight')
+
+print(f"=== UBER FEMININO - ROTA SEGURA ===")
+print(f"Partida: {origem} | Destino: {destino}")
+print(f"Melhor Rota: {' -> '.join(melhor_rota)}")
+print(f"Custo Total: {custo_total}\n")
+
+# 5. Visualização Gráfica com Nomes Quebrados em Linhas
+fig, ax = plt.subplots(figsize=(13, 7.5))
+fig.patch.set_facecolor('#fff0f3') # Fundo rosado bem suave e delicado
+ax.set_facecolor('#fff0f3')
+
+# Coordenadas ajustadas para dar respiro em volta de todos os nós
+pos = {
+    'Residência': (1.2, 4.8),
+    'Av. das Flores': (0, 2.8),
+    'Praça Central': (4.2, 3.8),
+    'Rua do Sol': (4.2, 1.8),
+    'Rua do Comércio': (1.8, 0.6),
+    'Universidade': (6.2, 0.6)
+}
+
+# Dicionário para quebrar os nomes longos em 2 linhas centralizadas
+rotulos_formatados = {
+    'Residência': 'Residência',
+    'Av. das Flores': 'Av. das\nFlores',
+    'Praça Central': 'Praça\nCentral',
+    'Rua do Sol': 'Rua do\nSol',
+    'Rua do Comércio': 'Rua do\nComércio',
+    'Universidade': 'Universidade'
+}
+
+nos_rota = set(melhor_rota)
+
+# Fundo branco para os círculos e bordas destacadas (Rosa para a rota ótima, escuro para os demais)
+cor_nos = ['#ffffff' for node in G.nodes()]
+cores_bordas = ['#ff4d6d' if node in nos_rota else '#495057' for node in G.nodes()]
+
+# Desenhar nós bem espaçosos
+nx.draw_networkx_nodes(G, pos, ax=ax, node_size=6500, node_color=cor_nos, edgecolors=cores_bordas, linewidths=3.5)
+
+# Separar tipos de arestas
+arestas_normais = [(u, v) for (u, v, d) in G.edges(data=True) if d['weight'] != float('inf') and not ((u in melhor_rota and v in melhor_rota) and abs(melhor_rota.index(u) - melhor_rota.index(v)) == 1)]
+arestas_otimas = [(melhor_rota[i], melhor_rota[i+1]) for i in range(len(melhor_rota)-1)]
+arestas_bloqueadas = [(u, v) for (u, v, d) in G.edges(data=True) if d['weight'] == float('inf')]
+
+# Desenhar arestas
+nx.draw_networkx_edges(G, pos, ax=ax, edgelist=arestas_normais, width=2.5, edge_color='#ced4da', alpha=0.9)
+nx.draw_networkx_edges(G, pos, ax=ax, edgelist=arestas_otimas, width=6, edge_color='#06d6a0') # Verde menta para a rota
+if arestas_bloqueadas:
+    nx.draw_networkx_edges(G, pos, ax=ax, edgelist=arestas_bloqueadas, width=3.5, edge_color='#e71d36', style='dashed')
+
+# Rótulos dos nós centralizados e com quebra de linha em PRETO BEM LEGÍVEL
+nx.draw_networkx_labels(G, pos, labels=rotulos_formatados, ax=ax, font_size=10, font_weight='bold', font_color='#000000')
+
+# Rótulos das arestas (Pesos e aviso de bloqueio)
+labels = {}
+for u, v, d in G.edges(data=True):
+    if d['weight'] == float('inf'):
+        labels[(u, v)] = ' [BLOQUEADA] \n (Evitada)'
+    else:
+        labels[(u, v)] = f" {d['weight']} "
+
+nx.draw_networkx_edge_labels(G, pos, edge_labels=labels, font_size=9, font_weight='bold', font_color='#212529', ax=ax)
+
+ax.set_title("Uber Feminino - Rota Inteligente e Segura\n(Simulação de Bloqueio Personalizado de Vias)", fontsize=15, fontweight='bold', color='#212529', pad=20)
+ax.axis('off')
+plt.tight_layout()
+plt.show()
