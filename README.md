@@ -1,10 +1,13 @@
-# Uber-Feminino-Girassol-Rotas-
+# GiraRota
 Projeto A3 - Site de transporte voltado para mulheres que permite priorizar rotas seguras e evitar vias específicas.
-*Canva Slides Coffee Time: ??
+*Canva / Powerpoint Slides: CanvaLink / PPLink
+*Código: Python [Google Colab](https://colab.research.google.com/drive/1lN3EdS07UkYw_AXIPAlgzbPXALr89uQ2?usp=sharing)
+*Pseudocódigo: Link
+*Gráfico: Link 
 
 ---
 # 📑 Sobre o Projeto
-O **Uber-Feminino** é uma plataforma de transporte exclusivo para mulheres que otimiza rotas seguras e permite bloquear vias específicas em tempo real.
+O **GiraRota** é uma plataforma de transporte exclusivo para mulheres que otimiza rotas seguras e permite bloquear vias específicas em tempo real.
 Professores: Edjane Mikaelly Silva de Azevedo e Ronyclei Raimundo da Silva
 
 ---
