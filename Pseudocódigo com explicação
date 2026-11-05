@@ -52,7 +52,7 @@ INÍCIO
     // PARTE 5: Exibição dos Dados no Console
     // ==========================================
     // Imprime os detalhes textuais do resultado da simulação para a usuária.
-    IMPRIMIR "=== UBER FEMININO - ROTA SEGURA ==="
+    IMPRIMIR "=== GIRAROTA - ROTA SEGURA ==="
     IMPRIMIR "Partida: ", origem, " | Destino: ", destino
     IMPRIMIR "Melhor Rota:", UNIR(melhor_rota COM " -> ")
     IMPRIMIR "Custo Total:", custo_total
