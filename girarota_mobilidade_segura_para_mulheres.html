@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GiraRota - Mobilidade Segura para Mulheres</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        girassol: {
+                            yellow: '#FFC837',
+                            yellowLight: '#FFF8E7',
+                            yellowHover: '#E5B22E',
+                            pinkBg: '#FFF2F5',
+                            pinkDark: '#E91E63',
+                            pinkLight: '#F8BBD0',
+                            brown: '#6D4C41',
+                            brownDark: '#4E342E',
+                            brownLight: '#8D6E63',
+                            green: '#10B981',
+                            cream: '#FFFFFF'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #FFF2F5;
+            color: #4E342E;
+        }
+
+        /* Estilização Profissional e Arredondada (Heurísticas de Design Moderno) */
+        .card-rounded {
+            background-color: #FFFFFF;
+            border: 1px solid rgba(109, 76, 65, 0.12);
+            box-shadow: 0 10px 30px -5px rgba(109, 76, 65, 0.08);
+            border-radius: 1.25rem; /* 20px arredondado */
+        }
+
+        .btn-rounded {
+            border-radius: 9999px; /* Totalmente arredondado tipo pill */
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-rounded:hover {
+            transform: translateY(-1.5px);
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.25);
+        }
+
+        .btn-rounded:active {
+            transform: translateY(0);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFF2F5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FFC837;
+            border-radius: 9999px;
+        }
+
+        canvas {
+            touch-action: none;
+            border-radius: 1rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- HEADER / NAVIGATION (Heurística 1 & 4: Visibilidade do Status & Padrões Elegantes) -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-stone-100 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                
+                <!-- Logo & Brand (GiraRota) -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('passageira')">
+                    <div class="w-12 h-12 bg-gradient-to-tr from-amber-400 to-yellow-300 flex items-center justify-center text-2xl shadow-md rounded-2xl transform hover:scale-105 transition-transform">
+                        🌻
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-black text-girassol-brownDark tracking-tight flex items-center gap-2">
+                            GiraRota <span class="text-white bg-girassol-pinkDark text-xs font-bold px-3 py-1 rounded-full shadow-sm">Mulheres</span>
+                        </h1>
+                        <p class="text-xs text-girassol-brown font-medium">Mobilidade Segura & Algoritmo Preventivo</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs (Heurística 4: Padrões e Consistência) -->
+                <nav class="hidden md:flex space-x-2 bg-rose-50/80 p-1.5 rounded-full border border-rose-100">
+                    <button id="nav-passageira" onclick="switchTab('passageira')" 
+                        class="px-6 py-2.5 font-bold text-sm flex items-center gap-2 bg-girassol-pinkDark text-white btn-rounded shadow-sm">
+                        <i class="fa-solid fa-person-dress"></i> Passageira
+                    </button>
+                    <button id="nav-motorista" onclick="switchTab('motorista')" 
+                        class="px-6 py-2.5 font-semibold text-sm flex items-center gap-2 text-girassol-brown hover:text-girassol-pinkDark btn-rounded">
+                        <i class="fa-solid fa-car-side"></i> Motorista
+                    </button>
+                    <button id="nav-teorico" onclick="switchTab('teorico')" 
+                        class="px-6 py-2.5 font-semibold text-sm flex items-center gap-2 text-girassol-brown hover:text-girassol-pinkDark btn-rounded">
+                        <i class="fa-solid fa-square-root-variable"></i> Painel Teórico (A3)
+                    </button>
+                </nav>
+
+                <!-- Status Badge -->
+                <div class="hidden lg:flex items-center gap-2 bg-amber-50 text-girassol-brown text-xs px-4 py-2 border border-amber-200/60 font-semibold rounded-full shadow-sm">
+                    <span class="w-2.5 h-2.5 bg-girassol-pinkDark rounded-full animate-ping"></span>
+                    Ambiente 100% Feminino
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="text-girassol-brown text-2xl p-2 focus:outline-none">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-stone-100 px-4 py-3 space-y-2 rounded-b-2xl shadow-lg">
+            <button onclick="switchTab('passageira')" class="w-full text-left px-4 py-3 font-bold text-sm text-stone-800 hover:bg-rose-50 flex items-center gap-2 rounded-xl">
+                <i class="fa-solid fa-person-dress text-girassol-pinkDark"></i> Visão Passageira
+            </button>
+            <button onclick="switchTab('motorista')" class="w-full text-left px-4 py-3 font-bold text-sm text-stone-800 hover:bg-rose-50 flex items-center gap-2 rounded-xl">
+                <i class="fa-solid fa-car-side text-girassol-brown"></i> Visão Motorista
+            </button>
+            <button onclick="switchTab('teorico')" class="w-full text-left px-4 py-3 font-bold text-sm text-stone-800 hover:bg-rose-50 flex items-center gap-2 rounded-xl">
+                <i class="fa-solid fa-square-root-variable text-girassol-yellow"></i> Painel Teórico (A3)
+            </button>
+        </div>
+    </header>
+
+    <!-- ALERT / NOTIFICATION BANNER (Heurística 5 & 9: Reconhecer e Prevenir Erros) -->
+    <div id="toast-notification" class="hidden fixed top-24 right-6 z-50 max-w-md bg-white border border-rose-100 p-4 card-rounded shadow-2xl transition-all transform duration-300">
+        <div class="flex items-start gap-3">
+            <div id="toast-icon" class="text-2xl text-girassol-pinkDark">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div>
+                <h4 id="toast-title" class="font-bold text-girassol-brownDark text-sm">Atualização do GiraRota</h4>
+                <p id="toast-message" class="text-xs text-stone-600 mt-0.5">Sua rota foi recalculada com total segurança.</p>
+            </div>
+            <button onclick="hideToast()" class="ml-auto text-stone-400 hover:text-stone-800 text-xs font-bold p-1">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+
+        <!-- ========================================== -->
+        <!-- TAB 1: PASSAGEIRA                          -->
+        <!-- ========================================== -->
+        <section id="tab-passageira" class="space-y-6">
+            
+            <!-- Header Section (Heurística 2: Correspondência com o mundo real) -->
+            <div class="bg-gradient-to-r from-amber-100 via-rose-100 to-amber-50 p-8 card-rounded flex flex-col md:flex-row justify-between items-center gap-6">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-black text-girassol-brownDark flex items-center gap-2">
+                        Bem-vinda ao GiraRota! 🌻
+                    </h2>
+                    <p class="text-sm text-girassol-brown font-medium mt-1">
+                        Configure a viagem e selecione ruas que deseja <strong>evitar por questão de segurança</strong>.
+                    </p>
+                </div>
+                <div class="flex items-center gap-3 bg-white px-5 py-2.5 text-xs font-bold text-girassol-brown rounded-full shadow-sm border border-stone-100">
+                    <span class="w-3 h-3 bg-girassol-yellow rounded-full"></span>
+                    Algoritmo Dijkstra Ativo
+                </div>
+            </div>
+
+            <!-- Main Interactive Layout Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                <!-- Left Column: Controls (Heurística 3 & 7: Flexibilidade e Eficiência) -->
+                <div class="lg:col-span-5 bg-white p-7 card-rounded space-y-6 flex flex-col justify-between">
+                    
+                    <div class="space-y-5">
+                        <div class="flex items-center justify-between border-b border-stone-100 pb-4">
+                            <h3 class="font-extrabold text-girassol-brownDark text-lg flex items-center gap-2">
+                                <i class="fa-solid fa-sliders text-girassol-pinkDark"></i> Definir Trajeto
+                            </h3>
+                            <span class="text-xs font-bold bg-amber-100 text-girassol-brown px-3 py-1 rounded-full">GiraRota Safe</span>
+                        </div>
+
+                        <!-- Origem -->
+                        <div>
+                            <label class="block text-xs font-bold text-girassol-brown uppercase mb-1.5">Ponto de Partida (Origem)</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-girassol-pinkDark">
+                                    <i class="fa-solid fa-circle-dot"></i>
+                                </span>
+                                <select id="select-origem" onchange="calcularRotaPassageira()" class="w-full bg-stone-50 border border-stone-200 text-stone-800 text-sm font-semibold pl-11 pr-4 py-3.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-girassol-pinkDark/20 focus:border-girassol-pinkDark transition-all">
+                                    <option value="Residência" selected>Residência</option>
+                                    <option value="Av. das Flores">Av. das Flores</option>
+                                    <option value="Praça Central">Praça Central</option>
+                                    <option value="Rua do Sol">Rua do Sol</option>
+                                    <option value="Rua do Comércio">Rua do Comércio</option>
+                                    <option value="Universidade">Universidade</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Destino -->
+                        <div>
+                            <label class="block text-xs font-bold text-girassol-brown uppercase mb-1.5">Ponto de Chegada (Destino)</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-emerald-500">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </span>
+                                <select id="select-destino" onchange="calcularRotaPassageira()" class="w-full bg-stone-50 border border-stone-200 text-stone-800 text-sm font-semibold pl-11 pr-4 py-3.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-girassol-pinkDark/20 focus:border-girassol-pinkDark transition-all">
+                                    <option value="Residência">Residência</option>
+                                    <option value="Av. das Flores">Av. das Flores</option>
+                                    <option value="Praça Central">Praça Central</option>
+                                    <option value="Rua do Sol">Rua do Sol</option>
+                                    <option value="Rua do Comércio">Rua do Comércio</option>
+                                    <option value="Universidade" selected>Universidade</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Restrição de Segurança (Heurística 5: Prevenção de Erros de Percurso) -->
+                        <div class="p-5 bg-rose-50/70 border border-rose-200/70 rounded-2xl space-y-3">
+                            <div class="flex items-center justify-between">
+                                <label class="text-xs font-bold text-girassol-pinkDark uppercase flex items-center gap-1.5">
+                                    <i class="fa-solid fa-shield-halved"></i> Bloqueio Personalizado de Vias
+                                </label>
+                                <span class="text-[10px] bg-girassol-pinkDark text-white font-bold px-2.5 py-0.5 rounded-full">Múltiplos Bloqueios</span>
+                            </div>
+                            <p class="text-xs text-stone-700 font-medium leading-relaxed">
+                                Adicione as vias que <strong>NUNCA</strong> deseja atravessar por questão de segurança:
+                            </p>
+
+                            <!-- Adicionar Novo Bloqueio -->
+                            <div class="grid grid-cols-12 gap-2 items-end">
+                                <div class="col-span-5">
+                                    <label class="block text-[11px] text-stone-600 font-medium mb-1">De (Início)</label>
+                                    <select id="select-bloqueio-origem" class="w-full bg-white border border-rose-200 text-stone-800 text-xs font-semibold p-2.5 rounded-xl">
+                                        <option value="Praça Central" selected>Praça Central</option>
+                                        <option value="Residência">Residência</option>
+                                        <option value="Av. das Flores">Av. das Flores</option>
+                                        <option value="Rua do Sol">Rua do Sol</option>
+                                        <option value="Rua do Comércio">Rua do Comércio</option>
+                                        <option value="Universidade">Universidade</option>
+                                    </select>
+                                </div>
+                                <div class="col-span-5">
+                                    <label class="block text-[11px] text-stone-600 font-medium mb-1">Para (Fim)</label>
+                                    <select id="select-bloqueio-destino" class="w-full bg-white border border-rose-200 text-stone-800 text-xs font-semibold p-2.5 rounded-xl">
+                                        <option value="Rua do Sol" selected>Rua do Sol</option>
+                                        <option value="Av. das Flores">Av. das Flores</option>
+                                        <option value="Praça Central">Praça Central</option>
+                                        <option value="Universidade">Universidade</option>
+                                        <option value="Rua do Comércio">Rua do Comércio</option>
+                                        <option value="Residência">Residência</option>
+                                    </select>
+                                </div>
+                                <div class="col-span-2">
+                                    <button type="button" onclick="adicionarBloqueio()" class="w-full bg-girassol-pinkDark text-white hover:bg-rose-600 font-bold p-2.5 rounded-xl text-xs flex items-center justify-center shadow-sm" title="Adicionar Bloqueio">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Lista Dinâmica de Vias Bloqueadas -->
+                            <div class="pt-2">
+                                <span class="text-[11px] font-bold text-stone-600 uppercase block mb-1.5">Vias Interditadas (<span id="count-bloqueios">1</span>):</span>
+                                <div id="lista-vias-bloqueadas" class="flex flex-wrap gap-2 max-h-28 overflow-y-auto p-1">
+                                    <!-- Badges de bloqueios gerados via JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card de Resultado dos Cálculos da Rota -->
+                        <div id="card-resultado-container" class="p-5 bg-amber-50/80 border border-amber-200/80 rounded-2xl space-y-2 transition-colors">
+                            <div class="flex justify-between items-center text-xs font-bold text-girassol-brown">
+                                <span>ROTA SEGURA CALCULADA</span>
+                                <span id="status-bloqueio-tag" class="text-rose-700 bg-rose-100 border border-rose-200 px-2.5 py-0.5 rounded-full font-bold">1 Via Bloqueada</span>
+                            </div>
+                            <div class="text-girassol-brownDark font-extrabold text-sm" id="resultado-caminho">
+                                Residência ➔ Av. das Flores ➔ Rua do Sol ➔ Rua do Comércio ➔ Universidade
+                            </div>
+                            <div class="flex justify-between items-center pt-2 border-t border-amber-200/50 text-xs">
+                                <span class="text-stone-600 font-semibold">Custo / Peso Total:</span>
+                                <span class="font-extrabold text-girassol-brown text-base" id="resultado-custo">11</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <button id="btn-solicitar" onclick="solicitarCorrida()" class="w-full bg-girassol-pinkDark hover:bg-rose-600 text-white font-extrabold py-4 btn-rounded shadow-lg flex items-center justify-center gap-2 text-base tracking-wide mt-4">
+                        <i class="fa-solid fa-paper-plane"></i> Chamar GiraRota
+                    </button>
+                </div>
+
+                <!-- Right Column: Interactive Maps (Heurística 8: Design Estético e Minimalista) -->
+                <div class="lg:col-span-7 bg-white p-7 card-rounded flex flex-col space-y-4">
+                    
+                    <!-- Map Switcher Tabs -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-stone-100 pb-4">
+                        <div class="flex items-center gap-2">
+                            <h3 class="font-extrabold text-girassol-brownDark text-lg">Visualização das Rotas</h3>
+                            <span class="text-xs bg-amber-100 text-girassol-brown font-semibold px-3 py-1 rounded-full">GiraRota Maps</span>
+                        </div>
+                        
+                        <!-- Tabs Map Switch -->
+                        <div class="inline-flex bg-stone-100/80 p-1.5 rounded-full text-xs font-semibold">
+                            <button id="tab-map-1" onclick="switchMap('grafo')" class="px-5 py-2 bg-white text-stone-900 rounded-full shadow-sm transition-all flex items-center gap-1.5 font-bold">
+                                <i class="fa-solid fa-diagram-project text-girassol-pinkDark"></i> Mapa 1: Grafo Teórico
+                            </button>
+                            <button id="tab-map-2" onclick="switchMap('gps')" class="px-5 py-2 text-stone-500 hover:text-stone-900 transition-all flex items-center gap-1.5 font-bold">
+                                <i class="fa-solid fa-location-arrow text-emerald-600"></i> Mapa 2: GPS em Tempo Real
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Map Container Canvas -->
+                    <div class="relative w-full h-[460px] bg-[#FFF2F5] rounded-2xl overflow-hidden flex items-center justify-center border border-rose-100">
+                        
+                        <!-- Map 1: NetworkX Canvas Simulation -->
+                        <div id="container-map-1" class="w-full h-full relative">
+                            <canvas id="canvas-grafo" class="w-full h-full"></canvas>
+                            <!-- Legend overlay -->
+                            <div class="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm p-3.5 rounded-2xl text-[11px] space-y-2 font-medium shadow-lg border border-stone-100">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="w-4 h-1 border-b-2 border-dashed border-rose-500"></span>
+                                    <span class="text-stone-700">Via Evitada por Segurança (∞)</span>
+                                </div>
+                                <div class="flex items-center gap-2.5">
+                                    <span class="w-4 h-1.5 bg-emerald-500 rounded-full"></span>
+                                    <span class="text-stone-700">Caminho Seguro Calculado</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Map 2: Real-time GPS Simulation Canvas -->
+                        <div id="container-map-2" class="w-full h-full relative hidden">
+                            <canvas id="canvas-gps" class="w-full h-full"></canvas>
+                            <div class="absolute top-4 left-4 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full text-xs font-bold text-stone-800 flex items-center gap-2 shadow-md border border-stone-100">
+                                <i class="fa-solid fa-compass text-emerald-500 animate-spin"></i>
+                                Navegação Ativa GiraRota
+                            </div>
+                            <!-- Legenda GPS -->
+                            <div class="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm p-3.5 rounded-2xl text-[11px] space-y-2 font-medium shadow-lg border border-stone-100">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="w-4 h-2 bg-emerald-500 rounded-full"></span>
+                                    <span class="text-stone-700">Trajeto Otimizado</span>
+                                </div>
+                                <div class="flex items-center gap-2.5">
+                                    <span class="w-4 h-1 border-b-2 border-dashed border-rose-500"></span>
+                                    <span class="text-stone-700">Trecho Interditado 🚫</span>
+                                </div>
+                            </div>
+                            <div class="absolute bottom-4 right-4 flex gap-2">
+                                <button onclick="iniciarAnimacaoGPS()" class="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-extrabold px-5 py-2.5 btn-rounded shadow-md flex items-center gap-2 uppercase tracking-wide">
+                                    <i class="fa-solid fa-play"></i> Iniciar Simulação
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Painel de Navegação Passo a Passo -->
+                <div class="lg:col-span-12 bg-white p-7 card-rounded space-y-5">
+                    <div class="flex justify-between items-center border-b border-stone-100 pb-4">
+                        <h3 class="font-extrabold text-girassol-brownDark text-lg flex items-center gap-2">
+                            <i class="fa-solid fa-route text-girassol-pinkDark"></i> Detalhamento das Etapas de Deslocamento
+                        </h3>
+                        <span id="status-corrida-passageira" class="text-xs font-bold text-girassol-brown bg-amber-100 px-3.5 py-1 rounded-full">
+                            Trajeto Seguro Pronto
+                        </span>
+                    </div>
+
+                    <div id="instrucoes-passos" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Preenchido via JS -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 3: PAINEL TEÓRICO (ACADÊMICO / A3)    -->
+        <!-- ========================================== -->
+        <section id="tab-teorico" class="space-y-8 hidden">
+            
+            <!-- Academic Banner Header -->
+            <div class="bg-white p-8 card-rounded space-y-4">
+                <div class="flex flex-wrap justify-between items-center gap-3">
+                    <span class="text-xs font-extrabold text-girassol-pinkDark uppercase tracking-widest bg-rose-100/80 px-3.5 py-1 rounded-full">
+                        Projeto Avaliativo A3 • Matemática Computacional Aplicada
+                    </span>
+                    <span class="text-xs text-stone-500 font-semibold">Docentes: Profª Me. Edjane Azevedo & Prof. Dr. Ronyclei Raimundo</span>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-black text-girassol-brownDark">
+                    Modelagem por Grafos e Algoritmo de Dijkstra para o GiraRota
+                </h2>
+                <p class="text-sm text-stone-600 font-medium leading-relaxed">
+                    O <strong>GiraRota</strong> resolve o problema de menor caminho em grafos não-orientados. A restrição de segurança solicitada pela passageira altera o peso <code class="bg-rose-50 text-rose-700 px-1.5 py-0.5 rounded font-semibold">w(e)</code> da via escolhida para <code class="bg-rose-50 text-rose-700 px-1.5 py-0.5 rounded font-semibold">∞</code> (infinito), garantindo desvio automático do trecho de risco.
+                </p>
+            </div>
+
+            <!-- Matrix & Dijkstra Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Matriz de Adjacencia -->
+                <div class="lg:col-span-7 bg-white p-7 card-rounded space-y-4">
+                    <h3 class="font-extrabold text-girassol-brownDark text-lg flex items-center gap-2">
+                        <i class="fa-solid fa-table text-girassol-brown"></i> Matriz de Adjacência do Grafo G
+                    </h3>
+                    <p class="text-xs text-stone-500 font-medium">
+                        Representação matricial em que a célula M[i][j] contêm o peso da conexão entre dois vértices.
+                    </p>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-center text-xs border border-stone-200 font-medium rounded-2xl overflow-hidden">
+                            <thead>
+                                <tr class="bg-amber-100/80 text-girassol-brownDark border-b border-stone-200 font-bold">
+                                    <th class="p-3 text-left border-r border-stone-200">Vértice</th>
+                                    <th class="p-3 border-r border-stone-200">Resid.</th>
+                                    <th class="p-3 border-r border-stone-200">Flores</th>
+                                    <th class="p-3 border-r border-stone-200">Praça</th>
+                                    <th class="p-3 border-r border-stone-200">Sol</th>
+                                    <th class="p-3 border-r border-stone-200">Comércio</th>
+                                    <th class="p-3">Univ.</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-stone-100 text-stone-700">
+                                <tr>
+                                    <td class="p-3 font-bold bg-stone-50 text-left border-r border-stone-200">Residência</td>
+                                    <td class="p-3 border-r border-stone-100 bg-stone-50">0</td>
+                                    <td class="p-3 border-r border-stone-100 text-emerald-600 font-bold">2</td>
+                                    <td class="p-3 border-r border-stone-100">4</td>
+                                    <td class="p-3 border-r border-stone-100 text-stone-400">∞</td>
+                                    <td class="p-3 border-r border-stone-100 text-stone-400">∞</td>
+                                    <td class="p-3 text-stone-400">∞</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold bg-stone-50 text-left border-r border-stone-200">Av. das Flores</td>
+                                    <td class="p-3 border-r border-stone-100 text-emerald-600 font-bold">2</td>
+                                    <td class="p-3 border-r border-stone-100 bg-stone-50">0</td>
+                                    <td class="p-3 border-r border-stone-100">1</td>
+                                    <td class="p-3 border-r border-stone-100">3</td>
+                                    <td class="p-3 border-r border-stone-100">6</td>
+                                    <td class="p-3 text-stone-400">∞</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold bg-stone-50 text-left border-r border-stone-200">Praça Central</td>
+                                    <td class="p-3 border-r border-stone-100">4</td>
+                                    <td class="p-3 border-r border-stone-100">1</td>
+                                    <td class="p-3 border-r border-stone-100 bg-stone-50">0</td>
+                                    <td class="p-3 border-r border-stone-100 text-rose-600 font-bold bg-rose-50">5 (ou ∞)</td>
+                                    <td class="p-3 border-r border-stone-100 text-stone-400">∞</td>
+                                    <td class="p-3">15</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold bg-stone-50 text-left border-r border-stone-200">Rua do Sol</td>
+                                    <td class="p-3 border-r border-stone-100 text-stone-400">∞</td>
+                                    <td class="p-3 border-r border-stone-100">3</td>
+                                    <td class="p-3 border-r border-stone-100 text-rose-600 font-bold bg-rose-50">5 (ou ∞)</td>
+                                    <td class="p-3 border-r border-stone-100 bg-stone-50">0</td>
+                                    <td class="p-3 border-r border-stone-100">2</td>
+                                    <td class="p-3 text-stone-400">∞</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold bg-stone-50 text-left border-r border-stone-200">Rua do Comércio</td>
+                                    <td class="p-3 border-r border-stone-100 text-stone-400">∞</td>
+                                    <td class="p-3 border-r border-stone-100">6</td>
+                                    <td class="p-3 border-r border-stone-100 text-stone-400">∞</td>
+                                    <td class="p-3 border-r border-stone-100">2</td>
+                                    <td class="p-3 border-r border-stone-100 bg-stone-50">0</td>
+                                    <td class="p-3 text-emerald-600 font-bold">3</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold bg-stone-50 text-left border-r border-stone-200">Universidade</td>
+                                    <td class="p-3 border-r border-stone-100 text-stone-400">∞</td>
+                                    <td class="p-3 border-r border-stone-100 text-stone-400">∞</td>
+                                    <td class="p-3 border-r border-stone-100">15</td>
+                                    <td class="p-3 border-r border-stone-100 text-stone-400">∞</td>
+                                    <td class="p-3 border-r border-stone-100 text-emerald-600 font-bold">3</td>
+                                    <td class="p-3 bg-stone-50">0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Dijkstra Algorithm Execution Steps -->
+                <div class="lg:col-span-5 bg-white p-7 card-rounded space-y-4">
+                    <h3 class="font-extrabold text-girassol-brownDark text-lg flex items-center gap-2">
+                        <i class="fa-solid fa-code-branch text-girassol-pinkDark"></i> Etapas do Algoritmo de Dijkstra
+                    </h3>
+                    
+                    <div class="space-y-3 text-xs text-stone-700 font-medium">
+                        <div class="p-4 bg-stone-50/80 border border-stone-200 rounded-2xl">
+                            <strong class="text-stone-900 font-bold block mb-1">1. Inicialização</strong>
+                            Dist[Residência] = 0; demais vértices = ∞.
+                        </div>
+                        <div class="p-4 bg-stone-50/80 border border-stone-200 rounded-2xl">
+                            <strong class="text-stone-900 font-bold block mb-1">2. Avaliação de Vizinhos</strong>
+                            Relaxamento das arestas conectadas à Residência: Av. Flores (cost: 2) e Praça Central (cost: 4).
+                        </div>
+                        <div class="p-4 bg-rose-50/80 border border-rose-200/80 rounded-2xl">
+                            <strong class="text-rose-900 font-bold block mb-1">3. Aplicação do Bloqueio de Segurança</strong>
+                            Peso da via (Praça Central ➔ Rua do Sol) = ∞. O algoritmo ignora este trecho e encontra o desvio pela Av. das Flores.
+                        </div>
+                        <div class="p-4 bg-amber-100/80 border border-amber-200/80 rounded-2xl">
+                            <strong class="text-girassol-brownDark font-bold block mb-1">4. Caminho Mínimo Resultante</strong>
+                            Residência ➔ Av. Flores ➔ Rua do Sol ➔ Comércio ➔ Universidade (Custo Total: 11).
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: MOTORISTA                           -->
+        <!-- ========================================== -->
+        <section id="tab-motorista" class="space-y-6 hidden">
+            <div class="bg-gradient-to-r from-amber-100 via-rose-100 to-amber-50 p-8 card-rounded flex flex-col md:flex-row justify-between items-center gap-6">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-black text-girassol-brownDark flex items-center gap-2">
+                        Painel da Motorista Parceira GiraRota 🚗🌻
+                    </h2>
+                    <p class="text-sm text-girassol-brown font-medium mt-1">
+                        Central de aceitação de solicitações com informações claras sobre preferências da passageira.
+                    </p>
+                </div>
+                <div class="flex items-center gap-3 bg-white px-5 py-2.5 text-xs font-bold text-girassol-brown rounded-full shadow-sm border border-stone-100">
+                    <span class="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></span>
+                    Motorista Conectada
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Card de Solicitação + SOS Exclusivo da Motorista -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="bg-white p-7 card-rounded space-y-5">
+                        <div class="flex justify-between items-center border-b border-stone-100 pb-4">
+                            <h3 class="font-extrabold text-girassol-brownDark text-lg flex items-center gap-2">
+                                <i class="fa-solid fa-bell text-girassol-pinkDark animate-bounce"></i> Nova Solicitação
+                            </h3>
+                            <span class="text-xs bg-rose-100 text-girassol-pinkDark font-bold px-3 py-1 rounded-full">Passageira Verificada</span>
+                        </div>
+
+                        <div class="space-y-3 text-xs font-medium">
+                            <div class="flex justify-between p-3.5 bg-stone-50 border border-stone-100 rounded-xl">
+                                <span class="text-stone-500">Passageira:</span>
+                                <span class="text-girassol-brownDark font-bold">Mariana Silva (4.9 ★)</span>
+                            </div>
+                            <div class="flex justify-between p-3.5 bg-stone-50 border border-stone-100 rounded-xl">
+                                <span class="text-stone-500">Embarque:</span>
+                                <span class="text-girassol-brownDark font-bold" id="mot-origem">Residência</span>
+                            </div>
+                            <div class="flex justify-between p-3.5 bg-stone-50 border border-stone-100 rounded-xl">
+                                <span class="text-stone-500">Desembarque:</span>
+                                <span class="text-girassol-brownDark font-bold" id="mot-destino">Universidade</span>
+                            </div>
+                            <div class="flex justify-between p-3.5 bg-rose-50 border border-rose-200/60 text-rose-900 rounded-xl">
+                                <span class="font-semibold">Via Bloqueada pela Passageira:</span>
+                                <span id="mot-bloqueio" class="font-bold">Praça Central ➔ Rua do Sol</span>
+                            </div>
+                            <div class="flex justify-between p-3.5 bg-amber-50 border border-amber-200/60 text-girassol-brownDark rounded-xl">
+                                <span class="font-semibold">Custo/Distância:</span>
+                                <span id="mot-distancia" class="font-extrabold">Custo 11</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 pt-2">
+                            <button onclick="recusarCorrida()" class="w-full bg-stone-100 text-stone-700 font-bold py-3.5 text-xs btn-rounded hover:bg-stone-200">
+                                Recusar
+                            </button>
+                            <button id="btn-aceitar-corrida" onclick="aceitarCorrida()" class="w-full bg-emerald-500 text-white font-extrabold py-3.5 text-xs btn-rounded shadow-md hover:bg-emerald-600">
+                                Aceitar Corrida
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- SOS EXCLUSIVO DA MOTORISTA (Heurística 1 & 9: Suporte e Socorro Imediato) -->
+                    <div class="bg-girassol-pinkDark text-white p-6 card-rounded space-y-4 shadow-lg">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-extrabold text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-triangle-exclamation animate-pulse text-yellow-300"></i> Botão SOS de Emergência (Motorista)
+                            </h4>
+                            <span class="text-[10px] bg-white/20 px-2.5 py-0.5 rounded-full font-bold">Central 24h</span>
+                        </div>
+                        <p class="text-xs text-rose-100 font-medium leading-relaxed">
+                            Acione em situações de risco durante a corrida. Transmite localização GPS em tempo real à central de apoio.
+                        </p>
+                        <button onclick="acionarSOS()" class="w-full bg-white text-girassol-pinkDark hover:bg-rose-50 font-extrabold py-3.5 text-xs btn-rounded shadow-md uppercase tracking-wide">
+                            <i class="fa-solid fa-phone-flip mr-1.5"></i> Disparar Alerta SOS
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Painel Turn by Turn na Visão Motorista -->
+                <div class="lg:col-span-7 bg-white p-7 card-rounded space-y-4">
+                    <div class="flex justify-between items-center border-b border-stone-100 pb-4">
+                        <h3 class="font-extrabold text-girassol-brownDark text-lg flex items-center gap-2">
+                            <i class="fa-solid fa-diamond-turn-right text-emerald-500"></i> GPS Turn-by-Turn
+                        </h3>
+                        <span id="status-corrida-motorista" class="text-xs font-bold text-girassol-brown bg-amber-100 px-3.5 py-1 rounded-full">
+                            Aguardando Aceite
+                        </span>
+                    </div>
+
+                    <div id="instrucoes-passos-motorista" class="space-y-3">
+                        <!-- Preenchido via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-girassol-brownDark text-white py-8 border-t border-amber-300/30 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-amber-100 font-medium">
+            <div class="flex items-center gap-2">
+                <span class="text-xl">🌻</span>
+                <span><strong>GiraRota</strong> • Aplicativo de Mobilidade Feminina e Matemática Computacional (A3)</span>
+            </div>
+            <div>
+                Interface Desenvolvida com Heurísticas de Nielsen (Amarelo, Marrom, Branco, Rosa).
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT LOGIC                           -->
+    <!-- ========================================== -->
+    <script>
+        // ============================================================
+        // 1. DATA MODEL & GRAPH DEFINITION (Python NetworkX Replica)
+        // ============================================================
+        const NODES = {
+            'Residência': { x: 0.20, y: 0.20, label: 'Residência' },
+            'Av. das Flores': { x: 0.12, y: 0.55, label: 'Av. das\nFlores' },
+            'Praça Central': { x: 0.55, y: 0.30, label: 'Praça\nCentral' },
+            'Rua do Sol': { x: 0.55, y: 0.65, label: 'Rua do\nSol' },
+            'Rua do Comércio': { x: 0.32, y: 0.88, label: 'Rua do\nComércio' },
+            'Universidade': { x: 0.88, y: 0.88, label: 'Universidade' }
+        };
+
+        const EDGES_BASE = [
+            { u: 'Residência', v: 'Praça Central', w: 4 },
+            { u: 'Residência', v: 'Av. das Flores', w: 2 },
+            { u: 'Praça Central', v: 'Av. das Flores', w: 1 },
+            { u: 'Praça Central', v: 'Rua do Sol', w: 5 },
+            { u: 'Av. das Flores', v: 'Rua do Sol', w: 3 },
+            { u: 'Praça Central', v: 'Universidade', w: 15 },
+            { u: 'Rua do Sol', v: 'Rua do Comércio', w: 2 },
+            { u: 'Av. das Flores', v: 'Rua do Comércio', w: 6 },
+            { u: 'Rua do Comércio', v: 'Universidade', w: 3 }
+        ];
+
+        // Lista dinâmica de vias bloqueadas pela passageira
+        let viasBloqueadas = [
+            { orig: 'Praça Central', dest: 'Rua do Sol' }
+        ];
+
+        let activeTab = 'passageira';
+        let activeMap = 'grafo';
+        let currentRouteResult = { path: [], cost: 0 };
+        let corridaAceita = false;
+        let gpsAnimationId = null;
+        let gpsProgress = 0;
+
+        // Helper Smooth Rounded Rectangle Canvas Drawing
+        function drawRoundedRect(ctx, x, y, width, height, radius, fillColor, strokeColor, borderWidth = 2) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+            
+            if (fillColor) {
+                ctx.fillStyle = fillColor;
+                ctx.fill();
+            }
+            if (strokeColor) {
+                ctx.lineWidth = borderWidth;
+                ctx.strokeStyle = strokeColor;
+                ctx.stroke();
+            }
+        }
+
+        // Check if an edge is blocked by the passenger
+        function isEdgeBlocked(u, v) {
+            return viasBloqueadas.some(b => 
+                (b.orig === u && b.dest === v) || (b.orig === v && b.dest === u)
+            );
+        }
+
+        function adicionarBloqueio() {
+            const orig = document.getElementById('select-bloqueio-origem').value;
+            const dest = document.getElementById('select-bloqueio-destino').value;
+
+            if (orig === dest) {
+                showToast("Aviso de Seleção", "Selecione locais diferentes para o bloqueio.", "warning");
+                return;
+            }
+
+            if (isEdgeBlocked(orig, dest)) {
+                showToast("Bloqueio Existente", "Esta via já está na sua lista de bloqueios.", "warning");
+                return;
+            }
+
+            viasBloqueadas.push({ orig, dest });
+            renderBadgesBloqueios();
+            calcularRotaPassageira();
+            showToast("Via Bloqueada", `Restrição adicionada: ${orig} ➔ ${dest}`, "success");
+        }
+
+        function removerBloqueio(index) {
+            viasBloqueadas.splice(index, 1);
+            renderBadgesBloqueios();
+            calcularRotaPassageira();
+            showToast("Bloqueio Removido", "Rota recalculada com sucesso.", "success");
+        }
+
+        function renderBadgesBloqueios() {
+            const container = document.getElementById('lista-vias-bloqueadas');
+            const countElem = document.getElementById('count-bloqueios');
+            if (countElem) countElem.innerText = viasBloqueadas.length;
+
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (viasBloqueadas.length === 0) {
+                container.innerHTML = `<span class="text-xs text-stone-500 font-medium italic">Nenhuma via bloqueada no momento.</span>`;
+                return;
+            }
+
+            viasBloqueadas.forEach((b, idx) => {
+                const badge = document.createElement('span');
+                badge.className = "inline-flex items-center gap-1.5 bg-rose-100 border border-rose-300 text-rose-800 text-xs font-bold px-3 py-1 rounded-full shadow-sm";
+                badge.innerHTML = `
+                    <span>🚫 ${b.orig} ➔ ${b.dest}</span>
+                    <button type="button" onclick="removerBloqueio(${idx})" class="text-rose-600 hover:text-rose-900 ml-1 font-extrabold focus:outline-none">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                `;
+                container.appendChild(badge);
+            });
+        }
+
+        // ============================================================
+        // 2. DIJKSTRA ALGORITHM IN JS
+        // ============================================================
+        function runDijkstra(origem, destino) {
+            let adj = {};
+            Object.keys(NODES).forEach(node => adj[node] = []);
+
+            EDGES_BASE.forEach(edge => {
+                let weight = edge.w;
+                if (isEdgeBlocked(edge.u, edge.v)) {
+                    weight = Infinity;
+                }
+                adj[edge.u].push({ node: edge.v, weight: weight });
+                adj[edge.v].push({ node: edge.u, weight: weight });
+            });
+
+            let distances = {};
+            let previous = {};
+            let nodes = new Set(Object.keys(NODES));
+
+            Object.keys(NODES).forEach(node => {
+                distances[node] = Infinity;
+                previous[node] = null;
+            });
+
+            distances[origem] = 0;
+
+            while (nodes.size > 0) {
+                let smallest = null;
+                nodes.forEach(node => {
+                    if (smallest === null || distances[node] < distances[smallest]) {
+                        smallest = node;
+                    }
+                });
+
+                if (smallest === null || distances[smallest] === Infinity) break;
+
+                if (smallest === destino) {
+                    let path = [];
+                    let curr = destino;
+                    while (curr) {
+                        path.unshift(curr);
+                        curr = previous[curr];
+                    }
+                    return { path, cost: distances[destino] };
+                }
+
+                nodes.delete(smallest);
+
+                adj[smallest].forEach(neighbor => {
+                    if (nodes.has(neighbor.node)) {
+                        let alt = distances[smallest] + neighbor.weight;
+                        if (alt < distances[neighbor.node]) {
+                            distances[neighbor.node] = alt;
+                            previous[neighbor.node] = smallest;
+                        }
+                    }
+                });
+            }
+
+            return { path: [], cost: Infinity };
+        }
+
+        // ============================================================
+        // 3. CONTROLLER & UI UPDATES
+        // ============================================================
+        function calcularRotaPassageira() {
+            const origem = document.getElementById('select-origem').value;
+            const destino = document.getElementById('select-destino').value;
+
+            if (origem === destino) {
+                showToast("Atenção", "Origem e Destino devem ser diferentes.", "error");
+                return;
+            }
+
+            currentRouteResult = runDijkstra(origem, destino);
+
+            const cardContainer = document.getElementById('card-resultado-container');
+            const btnSolicitar = document.getElementById('btn-solicitar');
+            const pathStrElem = document.getElementById('resultado-caminho');
+            const custoElem = document.getElementById('resultado-custo');
+            const tagBloqueio = document.getElementById('status-bloqueio-tag');
+
+            if (currentRouteResult.cost === Infinity || currentRouteResult.path.length === 0) {
+                // Sem Rota Segura Disponível
+                if (pathStrElem) {
+                    pathStrElem.innerHTML = `
+                        <div class="flex items-center gap-2 text-rose-700 font-extrabold">
+                            <i class="fa-solid fa-triangle-exclamation text-base"></i>
+                            <span>NÃO HÁ ROTAS SEGURAS DISPONÍVEIS PARA O TRAJETO SELECIONADO</span>
+                        </div>
+                    `;
+                }
+                if (custoElem) custoElem.innerText = 'Impossível (∞)';
+
+                if (cardContainer) {
+                    cardContainer.className = "p-5 bg-rose-100/90 border-2 border-rose-300 rounded-2xl space-y-2 transition-colors";
+                }
+
+                if (tagBloqueio) {
+                    tagBloqueio.innerText = `${viasBloqueadas.length} Via(s) Evitada(s)`;
+                    tagBloqueio.className = "text-rose-800 bg-rose-200 border border-rose-300 px-3 py-1 rounded-full font-bold text-[11px]";
+                }
+
+                if (btnSolicitar) {
+                    btnSolicitar.disabled = true;
+                    btnSolicitar.className = "w-full bg-stone-300 text-stone-500 font-extrabold py-4 btn-rounded shadow-none flex items-center justify-center gap-2 text-base tracking-wide mt-4 cursor-not-allowed";
+                    btnSolicitar.innerHTML = `<i class="fa-solid fa-ban"></i> Sem Rota Segura Disponível`;
+                }
+            } else {
+                // Rota Válida Calculada
+                const pathStr = currentRouteResult.path.join(' ➔ ');
+                if (pathStrElem) pathStrElem.innerText = pathStr;
+                if (custoElem) custoElem.innerText = currentRouteResult.cost;
+
+                if (cardContainer) {
+                    cardContainer.className = "p-5 bg-amber-50/80 border border-amber-200/80 rounded-2xl space-y-2 transition-colors";
+                }
+
+                if (tagBloqueio) {
+                    tagBloqueio.innerText = viasBloqueadas.length > 0 ? `${viasBloqueadas.length} Via(s) Evitada(s)` : "Sem Bloqueios";
+                    tagBloqueio.className = viasBloqueadas.length > 0 
+                        ? "text-rose-700 bg-rose-100 border border-rose-200 px-3 py-1 rounded-full font-bold text-[11px]" 
+                        : "text-stone-600 bg-stone-100 border border-stone-200 px-3 py-1 rounded-full font-bold text-[11px]";
+                }
+
+                if (btnSolicitar) {
+                    btnSolicitar.disabled = false;
+                    btnSolicitar.className = "w-full bg-girassol-pinkDark hover:bg-rose-600 text-white font-extrabold py-4 btn-rounded shadow-lg flex items-center justify-center gap-2 text-base tracking-wide mt-4";
+                    btnSolicitar.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Chamar GiraRota`;
+                }
+            }
+
+            const strBloqueios = viasBloqueadas.map(b => `${b.orig}➔${b.dest}`).join(', ') || 'Nenhum';
+            document.getElementById('mot-origem').innerText = origem;
+            document.getElementById('mot-destino').innerText = destino;
+            document.getElementById('mot-bloqueio').innerText = strBloqueios;
+            document.getElementById('mot-distancia').innerText = currentRouteResult.cost === Infinity ? 'Sem Trajeto' : `Custo ${currentRouteResult.cost}`;
+
+            atualizarInstrucoesPassoAPasso();
+            renderGraphMap();
+            if (activeMap === 'gps') renderGPSMap();
+        }
+
+        function atualizarInstrucoesPassoAPasso() {
+            const container = document.getElementById('instrucoes-passos');
+            const containerMot = document.getElementById('instrucoes-passos-motorista');
+            
+            if (container) container.innerHTML = '';
+            if (containerMot) containerMot.innerHTML = '';
+
+            if (currentRouteResult.cost === Infinity || currentRouteResult.path.length <= 1) {
+                if (container) {
+                    container.innerHTML = `
+                        <div class="col-span-2 p-5 bg-rose-50 border border-rose-200 rounded-2xl text-center space-y-2">
+                            <i class="fa-solid fa-triangle-exclamation text-rose-600 text-2xl"></i>
+                            <h4 class="font-extrabold text-rose-950 text-sm">Não foi possível gerar instruções de percurso</h4>
+                            <p class="text-xs text-rose-800">Todas as conexões para o destino selecionado foram interrompidas pelas vias bloqueadas. Remova um bloqueio para calcular um novo trajeto.</p>
+                        </div>
+                    `;
+                }
+                if (containerMot) {
+                    containerMot.innerHTML = `
+                        <div class="p-5 bg-rose-50 border border-rose-200 rounded-2xl text-center space-y-2">
+                            <i class="fa-solid fa-triangle-exclamation text-rose-600 text-2xl"></i>
+                            <h4 class="font-extrabold text-rose-950 text-sm">Sem rota calculada</h4>
+                            <p class="text-xs text-rose-800">Passageira definiu restrições que tornam o destino inalcançável.</p>
+                        </div>
+                    `;
+                }
+                return;
+            }
+
+            if (containerMot) {
+                const headerInfo = document.createElement('div');
+                headerInfo.className = "p-4 bg-emerald-50 border border-emerald-200/80 rounded-2xl flex items-center justify-between mb-4 font-medium";
+                headerInfo.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-emerald-500 text-white flex items-center justify-center rounded-xl shadow-sm">
+                            <i class="fa-solid fa-location-arrow"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-emerald-950 font-bold text-xs">Rota Segura GiraRota</h4>
+                            <p class="text-[11px] text-emerald-800">${currentRouteResult.path[0]} ➔ ${currentRouteResult.path[currentRouteResult.path.length - 1]}</p>
+                        </div>
+                    </div>
+                    <span class="text-xs text-emerald-950 bg-emerald-200/80 px-3 py-1 rounded-full font-bold">
+                        Custo: ${currentRouteResult.cost}
+                    </span>
+                `;
+                containerMot.appendChild(headerInfo);
+
+                if (viasBloqueadas.length > 0) {
+                    const alertBloqueio = document.createElement('div');
+                    alertBloqueio.className = "p-3.5 bg-rose-50 border border-rose-200/80 rounded-2xl flex items-center gap-2.5 text-rose-950 text-xs font-semibold mb-4";
+                    alertBloqueio.innerHTML = `
+                        <i class="fa-solid fa-shield-halved text-rose-600 text-base"></i>
+                        <span>${viasBloqueadas.length} via(s) evitada(s) por preferência da passageira.</span>
+                    `;
+                    containerMot.appendChild(alertBloqueio);
+                }
+            }
+
+            for (let i = 0; i < currentRouteResult.path.length - 1; i++) {
+                const de = currentRouteResult.path[i];
+                const para = currentRouteResult.path[i+1];
+
+                if (container) {
+                    const step = document.createElement('div');
+                    step.className = "flex items-start gap-3.5 p-4 bg-stone-50/80 border border-stone-200/60 rounded-2xl font-medium";
+                    step.innerHTML = `
+                        <div class="w-8 h-8 bg-amber-200/80 text-girassol-brownDark rounded-xl flex items-center justify-center text-xs font-black shadow-sm shrink-0">
+                            ${i + 1}
+                        </div>
+                        <div>
+                            <h5 class="text-stone-900 font-bold text-xs">${de} ➔ ${para}</h5>
+                            <p class="text-[11px] text-stone-500 mt-0.5">Trecho seguro e otimizado via GiraRota.</p>
+                        </div>
+                    `;
+                    container.appendChild(step);
+                }
+
+                if (containerMot) {
+                    const stepMot = document.createElement('div');
+                    stepMot.className = "flex items-center justify-between p-4 bg-stone-50/80 border border-stone-200/60 rounded-2xl font-medium";
+                    stepMot.innerHTML = `
+                        <div class="flex items-center gap-3.5">
+                            <div class="w-9 h-9 bg-white text-stone-700 border border-stone-200 rounded-xl flex items-center justify-center text-xs shadow-sm">
+                                <i class="fa-solid ${i === 0 ? 'fa-play text-emerald-500' : (i === currentRouteResult.path.length - 2 ? 'fa-flag-checkered text-rose-500' : 'fa-arrow-right text-amber-500')}"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-stone-900 font-bold text-xs">Trecho ${i + 1}: ${de} ➔ ${para}</h5>
+                                <p class="text-[11px] text-stone-500">Navegação ativa.</p>
+                            </div>
+                        </div>
+                        <span class="text-[11px] text-stone-600 bg-white px-3 py-1 rounded-full border border-stone-200 font-semibold">
+                            Etapa ${i + 1}/${currentRouteResult.path.length - 1}
+                        </span>
+                    `;
+                    containerMot.appendChild(stepMot);
+                }
+            }
+        }
+
+        function solicitarCorrida() {
+            if (currentRouteResult.cost === Infinity || currentRouteResult.path.length === 0) {
+                showToast("Rota Indisponível", "Não é possível solicitar a corrida sem uma rota válida.", "error");
+                return;
+            }
+            showToast("Solicitação Enviada! 🌻", "Conectando com motoristas parceiras do GiraRota...", "success");
+            switchTab('motorista');
+        }
+
+        function aceitarCorrida() {
+            corridaAceita = true;
+            document.getElementById('status-corrida-motorista').innerText = "Em Andamento (Com Passageira)";
+            document.getElementById('status-corrida-motorista').className = "text-xs font-bold text-emerald-900 bg-emerald-200/80 px-3.5 py-1 rounded-full";
+            document.getElementById('btn-aceitar-corrida').disabled = true;
+            document.getElementById('btn-aceitar-corrida').className = "w-full bg-stone-200 text-stone-400 font-bold py-3.5 text-xs btn-rounded cursor-not-allowed";
+            showToast("Corrida Aceita!", "Iniciando rota GiraRota para a motorista.", "success");
+            switchMap('gps');
+            iniciarAnimacaoGPS();
+        }
+
+        function recusarCorrida() {
+            showToast("Solicitação Recusada", "Buscando outra motorista disponível.", "warning");
+        }
+
+        function acionarSOS() {
+            showToast("⚠️ SOS DISPARADO!", "Alerta de emergência e localização enviados para a Central 190 e contatos de confiança.", "error");
+        }
+
+        // ============================================================
+        // 4. MAP 1: MODERN SMOOTH GRAPH RENDERER
+        // ============================================================
+        function renderGraphMap() {
+            const canvas = document.getElementById('canvas-grafo');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+
+            const width = canvas.width;
+            const height = canvas.height;
+
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = '#FFF2F5';
+            ctx.fillRect(0, 0, width, height);
+
+            // Draw Edges
+            EDGES_BASE.forEach(edge => {
+                const u = NODES[edge.u];
+                const v = NODES[edge.v];
+
+                const x1 = Math.round(u.x * width);
+                const y1 = Math.round(u.y * height);
+                const x2 = Math.round(v.x * width);
+                const y2 = Math.round(v.y * height);
+
+                const isBlocked = isEdgeBlocked(edge.u, edge.v);
+
+                const isInRoute = currentRouteResult.path.some((n, idx) => {
+                    if (idx === currentRouteResult.path.length - 1) return false;
+                    const next = currentRouteResult.path[idx + 1];
+                    return (n === edge.u && next === edge.v) || (n === edge.v && next === edge.u);
+                });
+
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+
+                if (isBlocked) {
+                    ctx.setLineDash([8, 8]);
+                    ctx.strokeStyle = '#E91E63';
+                    ctx.lineWidth = 4;
+                } else if (isInRoute) {
+                    ctx.setLineDash([]);
+                    ctx.strokeStyle = '#10B981';
+                    ctx.lineWidth = 7;
+                } else {
+                    ctx.setLineDash([]);
+                    ctx.strokeStyle = '#D7CCC8';
+                    ctx.lineWidth = 3;
+                }
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Edge weight text box
+                const midX = Math.round((x1 + x2) / 2);
+                const midY = Math.round((y1 + y2) / 2);
+
+                if (isBlocked) {
+                    drawRoundedRect(ctx, midX - 45, midY - 14, 90, 28, 14, '#FFFFFF', '#E91E63', 1.5);
+                    ctx.fillStyle = '#E91E63';
+                    ctx.font = 'bold 9px Poppins';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('[BLOQUEADA]', midX, midY - 1);
+                    ctx.fillText('(Evitada)', midX, midY + 9);
+                } else {
+                    drawRoundedRect(ctx, midX - 14, midY - 10, 28, 20, 10, '#FFFFFF', '#6D4C41', 1.5);
+                    ctx.fillStyle = '#4E342E';
+                    ctx.font = 'bold 11px Poppins';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(edge.w, midX, midY + 4);
+                }
+            });
+
+            // Draw Nodes
+            Object.keys(NODES).forEach(nodeKey => {
+                const node = NODES[nodeKey];
+                const nx = Math.round(node.x * width);
+                const ny = Math.round(node.y * height);
+                const isInRoute = currentRouteResult.path.includes(nodeKey);
+
+                const radius = 32;
+                const strokeColor = isInRoute ? '#E91E63' : '#6D4C41';
+                
+                ctx.beginPath();
+                ctx.arc(nx, ny, radius, 0, 2 * Math.PI);
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fill();
+                ctx.lineWidth = isInRoute ? 4 : 2.5;
+                ctx.strokeStyle = strokeColor;
+                ctx.stroke();
+
+                if (nodeKey === document.getElementById('select-origem').value) {
+                    ctx.font = '16px serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('🌻', nx, ny - radius - 6);
+                }
+
+                ctx.fillStyle = '#4E342E';
+                ctx.font = 'bold 10px Poppins';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                const lines = node.label.split('\n');
+                if (lines.length > 1) {
+                    ctx.fillText(lines[0], nx, ny - 6);
+                    ctx.fillText(lines[1], nx, ny + 8);
+                } else {
+                    ctx.fillText(lines[0], nx, ny);
+                }
+            });
+        }
+
+        // ============================================================
+        // 5. MAP 2: MODERN REAL-TIME GPS ANIMATION
+        // ============================================================
+        function renderGPSMap() {
+            const canvas = document.getElementById('canvas-gps');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+
+            const width = canvas.width;
+            const height = canvas.height;
+
+            ctx.clearRect(0, 0, width, height);
+
+            ctx.fillStyle = '#FFF8E7';
+            ctx.fillRect(0, 0, width, height);
+
+            // Render Road Network
+            EDGES_BASE.forEach(edge => {
+                const u = NODES[edge.u];
+                const v = NODES[edge.v];
+                
+                const isBlocked = isEdgeBlocked(edge.u, edge.v);
+
+                ctx.beginPath();
+                ctx.moveTo(u.x * width, u.y * height);
+                ctx.lineTo(v.x * width, v.y * height);
+
+                if (isBlocked) {
+                    ctx.setLineDash([8, 8]);
+                    ctx.strokeStyle = '#E91E63';
+                    ctx.lineWidth = 8;
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                } else {
+                    ctx.setLineDash([]);
+                    ctx.strokeStyle = '#FFFFFF';
+                    ctx.lineWidth = 14;
+                    ctx.stroke();
+                    ctx.strokeStyle = '#E0D0C0';
+                    ctx.lineWidth = 18;
+                    ctx.globalCompositeOperation = 'destination-over';
+                    ctx.stroke();
+                    ctx.globalCompositeOperation = 'source-over';
+                }
+            });
+
+            viasBloqueadas.forEach(b => {
+                const nodeU = NODES[b.orig];
+                const nodeV = NODES[b.dest];
+                if (nodeU && nodeV) {
+                    const midX = (nodeU.x + nodeV.x) / 2 * width;
+                    const midY = (nodeU.y + nodeV.y) / 2 * height;
+                    ctx.font = '18px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('🚫', midX, midY);
+                }
+            });
+
+            // Highlight Active Path
+            if (currentRouteResult.path.length > 1) {
+                ctx.beginPath();
+                for (let i = 0; i < currentRouteResult.path.length; i++) {
+                    const node = NODES[currentRouteResult.path[i]];
+                    const x = node.x * width;
+                    const y = node.y * height;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.strokeStyle = '#10B981';
+                ctx.lineWidth = 8;
+                ctx.stroke();
+            }
+
+            // Draw Pins
+            Object.keys(NODES).forEach(key => {
+                const node = NODES[key];
+                const x = node.x * width;
+                const y = node.y * height;
+
+                const isInRoute = currentRouteResult.path.includes(key);
+
+                ctx.beginPath();
+                ctx.arc(x, y, 10, 0, 2 * Math.PI);
+                ctx.fillStyle = isInRoute ? '#E91E63' : '#A09080';
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#FFFFFF';
+                ctx.stroke();
+
+                ctx.fillStyle = '#4E342E';
+                ctx.font = 'bold 11px Poppins';
+                ctx.textAlign = 'center';
+                ctx.fillText(key, x, y + 24);
+            });
+
+            // Animated Vehicle
+            if (currentRouteResult.path.length > 1) {
+                const totalSegments = currentRouteResult.path.length - 1;
+                const segmentProgress = (gpsProgress * totalSegments) % 1;
+                const currentSegment = Math.min(Math.floor(gpsProgress * totalSegments), totalSegments - 1);
+
+                const nodeA = NODES[currentRouteResult.path[currentSegment]];
+                const nodeB = NODES[currentRouteResult.path[currentSegment + 1]];
+
+                const carX = (nodeA.x + (nodeB.x - nodeA.x) * segmentProgress) * width;
+                const carY = (nodeA.y + (nodeB.y - nodeA.y) * segmentProgress) * height;
+
+                drawRoundedRect(ctx, carX - 18, carY - 18, 36, 36, 18, '#FFC837', '#6D4C41', 2);
+
+                ctx.font = '16px serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('🚗', carX, carY);
+            }
+        }
+
+        function iniciarAnimacaoGPS() {
+            if (gpsAnimationId) cancelAnimationFrame(gpsAnimationId);
+            gpsProgress = 0;
+
+            function step() {
+                gpsProgress += 0.003;
+                if (gpsProgress > 1) gpsProgress = 0;
+                renderGPSMap();
+                gpsAnimationId = requestAnimationFrame(step);
+            }
+
+            step();
+        }
+
+        // ============================================================
+        // 6. NAVIGATION CONTROLLER
+        // ============================================================
+        function switchTab(tabId) {
+            activeTab = tabId;
+            ['passageira', 'motorista', 'teorico'].forEach(t => {
+                const sec = document.getElementById(`tab-${t}`);
+                const btn = document.getElementById(`nav-${t}`);
+                if (sec) {
+                    if (t === tabId) sec.classList.remove('hidden');
+                    else sec.classList.add('hidden');
+                }
+                if (btn) {
+                    if (t === tabId) {
+                        btn.className = "px-6 py-2.5 font-bold text-sm flex items-center gap-2 bg-girassol-pinkDark text-white btn-rounded shadow-sm";
+                    } else {
+                        btn.className = "px-6 py-2.5 font-semibold text-sm flex items-center gap-2 text-girassol-brown hover:text-girassol-pinkDark btn-rounded";
+                    }
+                }
+            });
+
+            if (tabId === 'passageira') renderGraphMap();
+        }
+
+        function switchMap(mapType) {
+            activeMap = mapType;
+            const btn1 = document.getElementById('tab-map-1');
+            const btn2 = document.getElementById('tab-map-2');
+            const c1 = document.getElementById('container-map-1');
+            const c2 = document.getElementById('container-map-2');
+
+            if (mapType === 'grafo') {
+                c1.classList.remove('hidden');
+                c2.classList.add('hidden');
+                btn1.className = "px-5 py-2 bg-white text-stone-900 rounded-full shadow-sm transition-all flex items-center gap-1.5 font-bold";
+                btn2.className = "px-5 py-2 text-stone-500 hover:text-stone-900 transition-all flex items-center gap-1.5 font-bold";
+                renderGraphMap();
+            } else {
+                c1.classList.add('hidden');
+                c2.classList.remove('hidden');
+                btn2.className = "px-5 py-2 bg-white text-stone-900 rounded-full shadow-sm transition-all flex items-center gap-1.5 font-bold";
+                btn1.className = "px-5 py-2 text-stone-500 hover:text-stone-900 transition-all flex items-center gap-1.5 font-bold";
+                renderGPSMap();
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function showToast(title, message, type = "success") {
+            const toast = document.getElementById('toast-notification');
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-message').innerText = message;
+            
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 5000);
+        }
+
+        function hideToast() {
+            document.getElementById('toast-notification').classList.add('hidden');
+        }
+
+        window.addEventListener('resize', () => {
+            renderGraphMap();
+            if (activeMap === 'gps') renderGPSMap();
+        });
+
+        window.onload = function () {
+            renderBadgesBloqueios();
+            calcularRotaPassageira();
+            renderGraphMap();
+        };
+    </script>
+</body>
+</html>
