@@ -1,0 +1,70 @@
+INÍCIO
+    // ==========================================
+    // PARTE 1: Parâmetros de Simulação de Segurança
+    // ==========================================
+    // Define os pontos de interesse iniciais da simulação:
+    // a via que a passageira deseja bloquear por segurança,
+    // e os pontos de origem e destino da viagem.
+    DECLARAR origem_bloqueio COMO "Praça Central"
+    DECLARAR destino_bloqueio COMO "Rua do Sol"
+    DECLARAR origem COMO "Residência"
+    DECLARAR destino COMO "Universidade"
+
+    // ==========================================
+    // PARTE 2: Criação do Grafo e Adição de Arestas
+    // ==========================================
+    // Inicializa uma estrutura de grafo vazia (onde os nós são locais
+    // e as arestas são as ruas com seus respectivos custos/pesos).
+    Grafo G <- CriarGrafoVazio()
+
+    // Adiciona os caminhos possíveis com seus pesos iniciais (ex: tempo, distância ou risco)
+    ADICIONAR_ARESTA(G, "Residência", "Praça Central", 4)
+    ADICIONAR_ARESTA(G, "Residência", "Av. das Flores", 2)
+    ADICIONAR_ARESTA(G, "Praça Central", "Av. das Flores", 1)
+    ADICIONAR_ARESTA(G, "Praça Central", "Rua do Sol", 5) // Rua que poderá ser bloqueada
+    ADICIONAR_ARESTA(G, "Av. das Flores", "Rua do Sol", 3)
+    ADICIONAR_ARESTA(G, "Praça Central", "Universidade", 15)
+    ADICIONAR_ARESTA(G, "Rua do Sol", "Rua do Comércio", 2)
+    ADICIONAR_ARESTA(G, "Av. das Flores", "Rua do Comércio", 6)
+    ADICIONAR_ARESTA(G, "Rua do Comércio", "Universidade", 3)
+
+    // ==========================================
+    // PARTE 3: Aplicação da Regra de Segurança
+    // ==========================================
+    // Verifica se a rua que a passageira quer evitar existe no grafo.
+    // Se existir, altera o peso dela para INFINITO em ambas as direções,
+    // forçando o algoritmo de roteamento a descartar essa rota completamente.
+    SE G possui aresta entre (origem_bloqueio, destino_bloqueio) ENTÃO
+        ATRIBUIR peso INFINITO para a aresta (origem_bloqueio, destino_bloqueio)
+        ATRIBUIR peso INFINITO para a aresta (destino_bloqueio, origem_bloqueio)
+    FIM SE
+
+    // ==========================================
+    // PARTE 4: Execução do Algoritmo de Roteamento (Dijkstra)
+    // ==========================================
+    // Aplica o algoritmo de Dijkstra para encontrar o caminho mais curto 
+    // entre a origem e o destino, respeitando o bloqueio (já que o peso infinito 
+    // fará com que essa via seja ignorada).
+    melhor_rota <- DIJKSTRA_CAMINHO(G, origem, destino)
+    custo_total <- DIJKSTRA_CUSTO(G, origem, destino)
+
+    // ==========================================
+    // PARTE 5: Exibição dos Dados no Console
+    // ==========================================
+    // Imprime os detalhes textuais do resultado da simulação para a usuária.
+    IMPRIMIR "=== UBER FEMININO - ROTA SEGURA ==="
+    IMPRIMIR "Partida: ", origem, " | Destino: ", destino
+    IMPRIMIR "Melhor Rota:", UNIR(melhor_rota COM " -> ")
+    IMPRIMIR "Custo Total:", custo_total
+
+    // ==========================================
+    // PARTE 6: Renderização e Visualização Gráfica
+    // ==========================================
+    // Prepara o ambiente visual com cores customizadas, coordenadas espaciais 
+    // dos nós, quebra de linhas para os nomes longos e destaque visual 
+    // (verde para a rota ótima, tracejado vermelho para a rota bloqueada).
+    ConfigurarLayoutVisualComCoordenadas(G)
+    DestacarNosDaRota(melhor_rota)
+    DestacarArestasNormais, ArestasDaRota E ArestasBloqueadas()
+    RENDERIZAR_GRAFICO_NA_TELA()
+FIM
