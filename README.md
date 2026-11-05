@@ -1,9 +1,9 @@
-# GiraRota
+# 🌻GiraRota
 Projeto A3 - Site de transporte voltado para mulheres que permite priorizar rotas seguras e evitar vias específicas.
-*Canva / Powerpoint Slides: CanvaLink / PPLink
-*Código: Python [Google Colab](https://colab.research.google.com/drive/1lN3EdS07UkYw_AXIPAlgzbPXALr89uQ2?usp=sharing)
-*Pseudocódigo: Link
-*Gráfico: Link 
+* Canva / Powerpoint Slides: [CanvaLink](https://canva.link/jzbpsunmnqhyoll) / PPLink
+* Código: Python [Google Colab](https://colab.research.google.com/drive/1lN3EdS07UkYw_AXIPAlgzbPXALr89uQ2?usp=sharing)
+* Pseudocódigo: Link
+* Gráfico: Link 
 
 ---
 # 📑 Sobre o Projeto
