@@ -339,10 +339,10 @@
                     <div class="relative w-full h-[460px] bg-[#FFF2F5] rounded-2xl overflow-hidden flex items-center justify-center border border-rose-100">
                         
                         <!-- Map 1: NetworkX Canvas Simulation -->
-                        <div id="container-map-1" class="w-full h-full relative">
-                            <canvas id="canvas-grafo" class="w-full h-full"></canvas>
-                            <!-- Legend overlay -->
-                            <div class="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm p-3.5 rounded-2xl text-[11px] space-y-2 font-medium shadow-lg border border-stone-100">
+                        <div id="container-map-1" class="w-full h-full relative flex flex-col">
+                            <canvas id="canvas-grafo" class="w-full flex-1 min-h-0"></canvas>
+                            <!-- Legenda em faixa própria, fora da área do mapa -->
+                            <div class="shrink-0 mx-3 mb-3 bg-white/95 backdrop-blur-sm px-4 py-3 rounded-2xl text-[11px] flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-medium shadow-md border border-stone-100">
                                 <div class="flex items-center gap-2.5">
                                     <span class="w-4 h-1 border-b-2 border-dashed border-rose-500"></span>
                                     <span class="text-stone-700">Via Evitada por Segurança (∞)</span>
@@ -1052,8 +1052,9 @@
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
 
-            canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = canvas.parentElement.clientHeight;
+            // Usa o espaço real do canvas; a legenda agora ocupa uma faixa separada.
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
 
             const width = canvas.width;
             const height = canvas.height;
